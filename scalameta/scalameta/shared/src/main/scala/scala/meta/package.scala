@@ -5,6 +5,7 @@ package object meta extends classifiers.Api with classifiers.Aliases
                        with parsers.Api with parsers.Aliases
                        with prettyprinters.Api with prettyprinters.Aliases
                        with quasiquotes.Api with quasiquotes.Aliases
+                       with inline.Api with inline.Aliases
                        with io.Api with io.Aliases
                        with inputs.Api with inputs.Aliases
                        with semanticdb.Api with semanticdb.Aliases
