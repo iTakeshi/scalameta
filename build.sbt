@@ -459,15 +459,6 @@ lazy val adhocRepoCredentials = sys.props("scalameta.repository.credentials")
 lazy val isCustomRepository = adhocRepoUri != null && adhocRepoCredentials != null
 
 lazy val publishableSettings = Def.settings(
-  publishTo := {
-    if (isCustomRepository) Some("adhoc" at adhocRepoUri)
-    else Some("Releases" at "https://oss.sonatype.org/service/local/staging/deploy/maven2")
-  },
-  credentials ++= {
-    val credentialsFile = if (adhocRepoCredentials != null) new File(adhocRepoCredentials) else null
-    if (credentialsFile != null) List(new FileCredentials(credentialsFile))
-    else Nil
-  },
   sharedSettings,
   publishArtifact.in(Compile) := true,
   publishArtifact.in(Test) := false,
@@ -622,14 +613,3 @@ def CiCommand(name: String)(commands: List[String]): Command = Command.command(n
 }
 def ci(command: String) = s"plz $ciScalaVersion $command"
 def customVersion = sys.props.get("scalameta.version")
-
-// Defining these here so it's only defined once and for all projects (including root)
-inScope(Global)(
-  Seq(
-    credentials ++= (for {
-      username <- sys.env.get("SONATYPE_USERNAME")
-      password <- sys.env.get("SONATYPE_PASSWORD")
-    } yield Credentials("Sonatype Nexus Repository Manager", "oss.sonatype.org", username, password)).toSeq,
-    PgpKeys.pgpPassphrase := sys.env.get("PGP_PASSPHRASE").map(_.toCharArray())
-  )
-)
